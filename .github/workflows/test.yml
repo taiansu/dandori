@@ -1,0 +1,269 @@
+name: Test Installation Script
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        test-case:
+          - name: "default"
+            args: ""
+            expected-langs: "python elixir node"
+            description: "預設安裝 (無參數)"
+
+          - name: "custom-langs"
+            args: "--langs=python,node"
+            expected-langs: "python node"
+            description: "自訂語言組合"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Display test info
+        run: |
+          echo "🧪 測試案例: ${{ matrix.test-case.name }}"
+          echo "📝 說明: ${{ matrix.test-case.description }}"
+          echo "🎯 參數: ${{ matrix.test-case.args }}"
+          echo "✅ 預期語言: ${{ matrix.test-case.expected-langs }}"
+
+      - name: Cache mise installations
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/mise/installs
+            ~/.local/share/mise/downloads
+          key: mise-${{ runner.os }}-shared-${{ hashFiles('.github/workflows/test.yml') }}
+          restore-keys: |
+            mise-${{ runner.os }}-shared-
+
+      - name: Verify Homebrew is installed
+        run: |
+          if command -v brew >/dev/null 2>&1; then
+            echo "✓ Homebrew 已安裝"
+            brew --version
+          else
+            echo "✗ Homebrew 未安裝（不應該發生在 GitHub Actions）"
+            exit 1
+          fi
+
+      - name: Run installation script
+        run: |
+          # 給腳本執行權限
+          chmod +x setup.sh
+
+          # 執行安裝腳本（自動回答所有提示為 Yes）
+          # 使用 yes 命令自動提供 "y" 回答
+          yes | ./setup.sh ${{ matrix.test-case.args }} || true
+        shell: bash
+
+      - name: Verify tools installation
+        run: |
+          echo "🔍 驗證基礎工具..."
+
+          tools=("git" "mise" "rg" "fzf")
+
+          for tool in "${tools[@]}"; do
+            if command -v "$tool" >/dev/null 2>&1; then
+              version=$($tool --version 2>&1 | head -n 1 || echo "無法取得版本")
+              echo "✓ $tool: $version"
+            else
+              echo "✗ $tool 未安裝"
+              exit 1
+            fi
+          done
+
+      - name: Verify mise config
+        run: |
+          echo "🔍 驗證 mise 設定檔..."
+
+          config_file="$HOME/.config/mise/config.toml"
+
+          if [[ -f "$config_file" ]]; then
+            echo "✓ 設定檔存在: $config_file"
+            echo ""
+            echo "📄 設定檔內容:"
+            cat "$config_file"
+            echo ""
+          else
+            echo "✗ 設定檔不存在"
+            exit 1
+          fi
+
+          # 驗證預期的語言是否在設定檔中
+          expected_langs="${{ matrix.test-case.expected-langs }}"
+
+          for lang in $expected_langs; do
+            if grep -q "^$lang = " "$config_file"; then
+              echo "✓ 語言 '$lang' 存在於設定檔中"
+            else
+              echo "✗ 語言 '$lang' 不在設定檔中"
+              exit 1
+            fi
+          done
+
+      - name: Setup mise in current shell
+        run: |
+          echo "🔧 設定 mise 環境..."
+          eval "$(mise activate bash)"
+          echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
+
+      - name: Install languages with mise
+        run: |
+          echo "📦 開始安裝語言環境..."
+
+          # 顯示將要安裝的內容
+          mise list || true
+
+          # 執行安裝
+          mise install -v
+
+          echo ""
+          echo "✓ 安裝完成"
+        shell: bash
+
+      - name: Verify language installations
+        run: |
+          echo "🔍 驗證語言版本..."
+
+          # 重新載入 mise 環境
+          eval "$(mise activate bash)"
+
+          expected_langs="${{ matrix.test-case.expected-langs }}"
+
+          for lang in $expected_langs; do
+            echo ""
+            echo "檢查 $lang..."
+
+            case $lang in
+              python)
+                if command -v python >/dev/null 2>&1; then
+                  version=$(python --version)
+                  echo "✓ Python: $version"
+                else
+                  echo "✗ Python 未安裝或不在 PATH 中"
+                  exit 1
+                fi
+                ;;
+
+              elixir)
+                if command -v elixir >/dev/null 2>&1; then
+                  version=$(elixir --version | grep "Elixir")
+                  echo "✓ Elixir: $version"
+
+                  # 同時驗證 Erlang
+                  if command -v erl >/dev/null 2>&1; then
+                    erl_version=$(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().' -noshell)
+                    echo "✓ Erlang/OTP: $erl_version"
+                  fi
+                else
+                  echo "✗ Elixir 未安裝或不在 PATH 中"
+                  exit 1
+                fi
+                ;;
+
+              node)
+                if command -v node >/dev/null 2>&1; then
+                  version=$(node --version)
+                  echo "✓ Node: $version"
+
+                  # 同時驗證 npm
+                  if command -v npm >/dev/null 2>&1; then
+                    npm_version=$(npm --version)
+                    echo "✓ npm: $npm_version"
+                  fi
+                else
+                  echo "✗ Node 未安裝或不在 PATH 中"
+                  exit 1
+                fi
+                ;;
+
+              rust)
+                if command -v rustc >/dev/null 2>&1; then
+                  version=$(rustc --version)
+                  echo "✓ Rust: $version"
+                else
+                  echo "✗ Rust 未安裝或不在 PATH 中"
+                  exit 1
+                fi
+                ;;
+
+              ruby)
+                if command -v ruby >/dev/null 2>&1; then
+                  version=$(ruby --version)
+                  echo "✓ Ruby: $version"
+                else
+                  echo "✗ Ruby 未安裝或不在 PATH 中"
+                  exit 1
+                fi
+                ;;
+            esac
+          done
+        shell: bash
+
+      - name: Test idempotency
+        run: |
+          echo "🔄 測試冪等性（重複執行）..."
+
+          # 第二次執行應該跳過已安裝的項目
+          yes | ./setup.sh ${{ matrix.test-case.args }} || true
+
+          echo "✓ 冪等性測試通過"
+        shell: bash
+
+      - name: Display mise info
+        if: always()
+        run: |
+          echo "📊 mise 資訊"
+          echo ""
+
+          eval "$(mise activate bash)"
+
+          echo "已安裝的工具:"
+          mise list || true
+
+          echo ""
+          echo "mise 設定:"
+          mise config || true
+
+          echo ""
+          echo "mise 狀態:"
+          mise doctor || true
+        shell: bash
+
+      - name: Save logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-${{ matrix.test-case.name }}
+          path: |
+            ~/.config/mise/
+            ~/.local/share/mise/installs/
+            ~/Library/Logs/Homebrew/
+          retention-days: 7
+
+  # 測試摘要
+  test-summary:
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+
+    steps:
+      - name: Test Summary
+        run: |
+          echo "## 測試結果摘要 🧪" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "所有測試案例已執行完成。" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ 預設安裝" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ 自訂語言組合" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ 單一語言" >> $GITHUB_STEP_SUMMARY

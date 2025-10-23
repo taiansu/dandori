@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# 測試相關
+*.log
+test-output/
+
+# 備份檔案
+*.backup.*
