@@ -68,10 +68,16 @@ parse_arguments() {
 
 # 檢查並安裝 Homebrew
 check_homebrew() {
+    INSTALL_HOMEBREW=true
     info "檢查 Homebrew..."
 
     if command_exists brew; then
         success "Homebrew 已安裝"
+        INSTALL_HOMEBREW=false
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
         return 0
     fi
 
@@ -104,6 +110,10 @@ check_homebrew() {
 # 安裝基礎工具
 install_tools() {
     local tools=("git" "mise" "ripgrep" "fzf")
+
+    if [[ "$DRY_RUN" == true ]]; then
+        return 0
+    fi
 
     info "開始安裝開發工具..."
 
@@ -222,19 +232,21 @@ expand_elixir_to_erlang() {
     echo "$result"
 }
 
-dry_run() {
+dry_info() {
   echo ""
   echo "=========================================="
   info "📋 Dry run 摘要"
   echo "=========================================="
   echo ""
-  echo "將安裝的語言環境:"
+  echo "🍺 將安裝 Homebrew: $([ "$INSTALL_HOMEBREW" = true ] && echo "✅" || echo "❌")"
+  echo ""
+  echo "📦 將安裝的語言環境:"
   IFS=',' read -ra LANGS <<< "$SELECTED_LANGS"
   for lang in "${LANGS[@]}"; do
       echo "  - $lang"
   done
   echo ""
-  echo "config.toml 預覽:"
+  echo "⚙️ config.toml 預覽:"
   echo "  位置: ~/.config/mise/config.toml"
   echo "  內容:"
   echo "    [tools]"
@@ -243,7 +255,7 @@ dry_run() {
       echo "    $lang = \"latest\""
   done
   echo ""
-  info "✓ Dry run 完成，未進行實際安裝"
+  info "🏎️ Dry run 完成，未進行實際安裝"
 }
 
 # 產生 mise 設定檔
@@ -422,7 +434,7 @@ prompt_mise_install() {
 main() {
     echo ""
     echo "=========================================="
-    echo "  macOS 開發環境自動設定指令碼"
+    echo " # 🍽️ dandori (段取り) macOS 開發環境設定"
     echo "=========================================="
     echo ""
 
@@ -438,7 +450,7 @@ main() {
     select_languages
 
     if [[ "$DRY_RUN" == true ]]; then
-        dry_run
+        dry_info
         exit 0
     fi
 
