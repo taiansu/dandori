@@ -133,16 +133,16 @@ install_tools() {
 
 # 互動式選擇語言
 select_languages_interactive() {
-    echo ""
-    echo "請選擇要安裝的語言環境 (輸入數字組合，例如 134)"
-    echo -e "${YELLOW}直接按 Enter 使用預設: Python, Elixir, Node${NC}"
-    echo ""
-    echo "1) Python"
-    echo "2) Elixir (含對應 Erlang 版本)"
-    echo "3) Node"
-    echo "4) Rust"
-    echo "5) Ruby"
-    echo ""
+    echo "" >&2
+    echo "請選擇要安裝的語言環境 (輸入數字組合，例如 134)" >&2
+    echo -e "${YELLOW}直接按 Enter 使用預設: Python, Elixir, Node${NC}" >&2
+    echo "" >&2
+    echo "1) Python" >&2
+    echo "2) Elixir (自動安裝對應 Erlang 版本)" >&2
+    echo "3) Node" >&2
+    echo "4) Rust" >&2
+    echo "5) Ruby" >&2
+    echo "" >&2
 
     read -p "你的選擇: " choice
 
@@ -167,18 +167,18 @@ select_languages_interactive() {
 
         case $digit in
             1) langs+=("python") ;;
-            2) langs+=("elixir") ;;
+            2) langs+=("elixir") ;;  # Elixir 需要 Erlang
             3) langs+=("node") ;;
             4) langs+=("rust") ;;
             5) langs+=("ruby") ;;
             *)
-                warning "忽略無效選項: $digit"
+                echo "⚠ 忽略無效選項: $digit" >&2
                 ;;
         esac
     done
 
     if [[ ${#langs[@]} -eq 0 ]]; then
-        warning "未選擇任何語言，使用預設配置"
+        echo "⚠ 未選擇任何語言，使用預設配置" >&2
         echo "python,elixir,node"
     else
         echo "${langs[@]}" | tr ' ' ','
