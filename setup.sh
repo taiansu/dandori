@@ -1,5 +1,5 @@
 #!/bin/bash
-# v1.0.0
+# v1.0.1
 
 # 顏色定義
 RED='\033[0;31m'
@@ -145,7 +145,7 @@ select_languages_interactive() {
     echo "5) Ruby" >&2
     echo "" >&2
 
-    read -p "你的選擇: " choice
+    read -p "你的選擇: " choice < /dev/tty
 
     # 如果直接按 Enter，使用預設
     if [[ -z "$choice" ]]; then
