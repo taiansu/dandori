@@ -63,7 +63,7 @@ curl -fsSL https://dandori.phx.tw | bash -s -- --interactive
 
 **預設組合**: `python`, `elixir`, `node`
 
-*註*: 若需要其它程式語言，後續可用 `mise` 手動輕鬆安裝。
+*註*：需要其它語言請見 [FAQ](#faq)
 
 ## 🎮 使用方式
 
@@ -153,10 +153,10 @@ bash setup.sh
 
 | 語言組合 | 預估時間（首次） | 說明 |
 |---------|----------------|------|
-| Python only | ~5 分鐘 | 較輕量 |
-| Python + Node | ~8 分鐘 | 常見組合 |
-| Python + Elixir + Node | ~30-40 分鐘 | Erlang 需要編譯 |
-| All languages | ~45-60 分鐘 | 包含 Rust 編譯 |
+| Python only | ~3 分鐘 | 較輕量 |
+| Python + Node | ~5 分鐘 | 常見組合 |
+| Python + Elixir + Node | ~20-30 分鐘 | Erlang 需要編譯 |
+| All languages | ~25-60 分鐘 | 包含 Rust 編譯 |
 
 > 💡 **提示**: Erlang 和 Rust 有可能需要從原始碼編譯，首次安裝較慢。後續版本更新會使用預編譯版本，速度較快。
 
@@ -180,6 +180,24 @@ mise use python@3.11
 # 查看 mise 狀態
 mise doctor
 ```
+
+更詳細的操作請參弄 [mise 說明](https://mise.jdx.dev/installing-mise.html)
+
+## [FAQ]
+
+Q: 這個工具可以幫我安裝其它語言嗎？
+A: `--langs` 選項可以安裝 `mise` 有 [支援](https://mise.jdx.dev/registry.html#tools)的所有語言(及工具)。
+例如：
+
+```bash
+curl -fsSL https://dandori.phx.tw | bash -s -- --langs=python,kotlin,clojure
+```
+
+Q: 承上，如果我在`--langs`選項亂加東西會怎樣？
+A: 你的電腦不會壞掉，但是如果你受不了 mise 一直抱怨的話，用編輯器打開 `~/.config/mise/config.toml` 把看起來不太妙的那(幾)行刪掉。
+
+Q: Windows 可以用嗎？
+A: 計劃中
 
 ## 🐛 疑難排解
 
