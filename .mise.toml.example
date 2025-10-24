@@ -9,7 +9,8 @@
 [tools]
 # 使用 "latest" 永遠追蹤最新穩定版
 python = "latest"
-elixir = "latest"  # 會自動安裝相容的 Erlang
+erlang = "latest"
+elixir = "latest"
 node = "latest"
 
 # 或指定特定版本
