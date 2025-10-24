@@ -143,6 +143,10 @@ select_languages_interactive() {
     echo "3) Node" >&2
     echo "4) Rust" >&2
     echo "5) Ruby" >&2
+    echo "6) Zig" >&2
+    echo "7) Swift" >&2
+    echo "8) Bun" >&2
+
     echo "" >&2
 
     read -p "你的選擇: " choice < /dev/tty
@@ -168,10 +172,13 @@ select_languages_interactive() {
 
         case $digit in
             1) langs+=("python") ;;
-            2) langs+=("elixir") ;;  # Elixir 需要 Erlang
+            2) langs+=("elixir") ;;
             3) langs+=("node") ;;
             4) langs+=("rust") ;;
             5) langs+=("ruby") ;;
+            6) langs+=("zig") ;;
+            7) langs+=("swift") ;;
+            8) langs+=("bun") ;;
             *)
                 echo "⚠ 忽略無效選項: $digit" >&2
                 ;;
