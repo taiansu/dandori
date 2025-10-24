@@ -1,5 +1,5 @@
 #!/bin/bash
-# v1.0.2
+# v1.0.3
 
 # 顏色定義
 RED='\033[0;31m'
@@ -114,7 +114,7 @@ check_homebrew() {
 
 # 安裝基礎工具
 install_tools() {
-    local tools=("git" "mise" "ripgrep" "fzf")
+    local tools=("git" "mise" "ripgrep" "fzf" "fd" "uv")
 
     if [[ "$DRY_RUN" == true ]]; then
         return 0

@@ -47,12 +47,13 @@ curl -fsSL https://dandori.phx.tw | bash -s -- --interactive
 - **ripgrep** - 快速文字搜尋
 - **fzf** - 模糊搜尋工具
 - **fd** - 檔案搜尋工具
+- **uv** - Python 專案管理工具
 
 ### 支援的語言環境
 
 | 選項 | 語言 | 說明 |
 |------|------|------|
-| `python` | Python | 最新穩定版 |
+| `python` | [Python](python.org) | 最新穩定版 |
 | `elixir` | [Elixir + Erlang](https://elixir-lang.org/) | 同時安裝對應的 Erlang 版本 |
 | `node` | [Node.js + npm](https://nodejs.org/en) | JavaScript 執行環境 |
 | `rust` | [Rust + Cargo](https://rust-lang.org/) |  |
@@ -183,20 +184,28 @@ mise doctor
 
 更詳細的操作請參弄 [mise 說明](https://mise.jdx.dev/installing-mise.html)
 
-## [FAQ]
+## 🙋 FAQ
 
 Q: 這個工具可以幫我安裝其它語言嗎？
+
 A: `--langs` 選項可以安裝 `mise` 有 [支援](https://mise.jdx.dev/registry.html#tools)的所有語言(及工具)。
 例如：
+
 
 ```bash
 curl -fsSL https://dandori.phx.tw | bash -s -- --langs=python,kotlin,clojure
 ```
 
+<br/>
+
 Q: 承上，如果我在`--langs`選項亂加東西會怎樣？
+
 A: 你的電腦不會壞掉，但是如果你受不了 mise 一直抱怨的話，用編輯器打開 `~/.config/mise/config.toml` 把看起來不太妙的那(幾)行刪掉。
 
+<br/>
+
 Q: Windows 可以用嗎？
+
 A: 計劃中
 
 ## 🐛 疑難排解
