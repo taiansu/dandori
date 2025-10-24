@@ -13,7 +13,7 @@
 ## ✨ 特色
 
 - 💡 **零設定安裝** - 一行指令完成所有設定
-- 🖥️ **正規環境配置** - 使用 [Homebrew](https://brew.sh)、[mise](https://mise.jdx.dev) 標準開發環境配置
+- 🖥️ **正規環境配置** - 使用 [Homebrew](https://brew.sh)、[mise](https://mise.jdx.dev) 標準開發環境設定慣例，易於維護
 - 📦 **必備開發工具** - Git、Ripgrep、fzf 等開發必備工具
 - 🔧 **可選擇語言** - 預設安裝常用語言，也可自訂組合
 - ♻️ **冪等性** - 重複執行安全，已安裝的工具自動跳過
@@ -53,10 +53,13 @@ curl -fsSL https://dandori.phx.tw | bash -s -- --interactive
 | 選項 | 語言 | 說明 |
 |------|------|------|
 | `python` | Python | 最新穩定版 |
-| `elixir` | Elixir + Erlang | 同時安裝對應的 Erlang 版本 |
-| `node` | Node.js + npm | JavaScript 執行環境 |
-| `rust` | Rust + Cargo | 系統程式語言 |
-| `ruby` | Ruby + gem | 腳本語言 |
+| `elixir` | [Elixir + Erlang](https://elixir-lang.org/) | 同時安裝對應的 Erlang 版本 |
+| `node` | [Node.js + npm](https://nodejs.org/en) | JavaScript 執行環境 |
+| `rust` | [Rust + Cargo](https://rust-lang.org/) |  |
+| `ruby` | [Ruby + gem](https://www.ruby-lang.org/en/) |  |
+| `zig` | [Zig](https://ziglang.org/) |  |
+| `swift` | [Swift](https://swift.org/) |  |
+| `bun` | [Bun](https://bun.com/) |  |
 
 **預設組合**: `python`, `elixir`, `node`
 
@@ -93,6 +96,9 @@ curl -fsSL https://dandori.phx.tw | bash -s -- --dry
 3) Node
 4) Rust
 5) Ruby
+6) Zig
+7) Swift
+8) Bun
 
 你的選擇: _
 ```
@@ -129,7 +135,7 @@ bash setup.sh
 
 ## ⚙️ 運作原理
 
-1. **檢查 Homebrew** - 若未安裝則自動安裝（需要 sudo）
+1. **檢查 Homebrew** - 若未安裝則自動安裝 (可能需要輸入使用者密碼)
 2. **安裝基礎工具** - 使用 Homebrew 安裝 git, mise, ripgrep, fzf
 3. **產生 mise 設定** - 建立 `~/.config/mise/config.toml`
 4. **設定 Shell 整合** - 自動加入 `mise activate` 到你的 shell rc 檔
