@@ -23,19 +23,19 @@
 ### 預設安裝（Python, Elixir, Node）
 
 ```bash
-curl -fsSL https://dandori.yourdomain.com | bash
+curl -fsSL https://dandori.phx.tw | bash
 ```
 
 ### 自訂語言組合
 
 ```bash
-curl -fsSL https://dandori.yourdomain.com | bash -s -- --langs=python,rust,ruby
+curl -fsSL https://dandori.phx.tw | bash -s -- --langs=python,rust,ruby
 ```
 
 ### 互動式選擇
 
 ```bash
-curl -fsSL https://dandori.yourdomain.com | bash -s -- --interactive
+curl -fsSL https://dandori.phx.tw | bash -s -- --interactive
 ```
 
 ## 📦 安裝內容
@@ -68,13 +68,13 @@ curl -fsSL https://dandori.yourdomain.com | bash -s -- --interactive
 
 ```bash
 # 使用預設語言組合
-curl -fsSL https://dandori.yourdomain.com | bash
+curl -fsSL https://dandori.phx.tw | bash
 
 # 指定語言（逗號分隔，不含空格）
-curl -fsSL https://dandori.yourdomain.com | bash -s -- --langs=python,rust
+curl -fsSL https://dandori.phx.tw | bash -s -- --langs=python,rust
 
 # 互動式選擇
-curl -fsSL https://dandori.yourdomain.com | bash -s -- --interactive
+curl -fsSL https://dandori.phx.tw | bash -s -- --interactive
 ```
 
 ### 互動模式
@@ -113,7 +113,7 @@ curl -fsSL https://dandori.yourdomain.com | bash -s -- --interactive
 
 ```bash
 # 下載腳本
-curl -fsSL https://dandori.yourdomain.com > setup.sh
+curl -fsSL https://dandori.phx.tw > setup.sh
 
 # 檢視內容
 less setup.sh
@@ -184,7 +184,7 @@ ping github.com
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/setup.sh)"
 
 # 重新執行 dandori
-curl -fsSL https://dandori.yourdomain.com | bash
+curl -fsSL https://dandori.phx.tw | bash
 ```
 
 ### mise 安裝語言失敗
