@@ -1,5 +1,5 @@
 #!/bin/bash
-# v1.0.1
+# v1.0.2
 
 # 顏色定義
 RED='\033[0;31m'
@@ -50,17 +50,21 @@ parse_arguments() {
                 CUSTOM_LANGS="${1#*=}"
                 shift
                 ;;
+            --languages=*)
+                CUSTOM_LANGS="${1#*=}"
+                shift
+                ;;
             --ci)
                 CI_MODE=true
                 shift
                 ;;
-            --dry-run)
+            --dry)
                 DRY_RUN=true
                 shift
                 ;;
             *)
                 error "未知參數: $1"
-                echo "用法: $0 [--interactive] [--langs=python,node,rust] [--ci] [--dry-run]"
+                echo "用法: $0 [--interactive] [--langs=python,node,rust] [--ci] [--dry]"
                 exit 1
                 ;;
         esac

@@ -75,6 +75,9 @@ curl -fsSL https://dandori.phx.tw | bash -s -- --langs=python,rust
 
 # 互動式選擇
 curl -fsSL https://dandori.phx.tw | bash -s -- --interactive
+
+# Dry run 模式 (只偵測並列印安裝計劃，不實際執行)
+curl -fsSL https://dandori.phx.tw | bash -s -- --dry
 ```
 
 ### 互動模式
